@@ -4,3 +4,10 @@ export enum CategoriesEnum {
     Politics = 'politics',
     Technology = 'technology'
 }
+
+
+
+export enum StatusEnum {
+    LOADING = 'loading',
+    SUCCESS = 'resolved'
+}
