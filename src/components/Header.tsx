@@ -1,21 +1,20 @@
 import React, { useState } from 'react'
 import '../scss/components/header.scss'
 
-import { CategoriesEnum } from '../types/enums';
+import { CategoriesEnum, PagesEnum } from '../types/enums';
 
-import { NavLink, useMatch } from 'react-router-dom';
-
-
+import { setCategory, setPage } from '../redux/slices/navigationSlice';
 
 
 
-const Header = () => {
-    const articlesMatch = useMatch("/");
-    const categoriesMatch = useMatch(`/categories/:${window.location.href.split(':').reverse()[0]}`);
-
-    const categories = Object.keys(CategoriesEnum);
 
 
+interface Props {
+    dispatch: any,
+    page: PagesEnum,
+    category: CategoriesEnum | null
+}
+const Header = ({ dispatch, page, category }: Props) => {
     const [isMouseOnDropDown, setIsMouseOnDropDown] = useState<boolean>(false);
 
     const mouseEnterOnDropDownHandler = () => {
@@ -27,35 +26,50 @@ const Header = () => {
 
 
 
+    const categories = Object.keys(CategoriesEnum);
+    
+    const onPageClick = (dispatchPage: PagesEnum) => {
+        dispatch(setPage(dispatchPage));
+    }
+    const onCategoryClick = (dispatchCategory: string) => {
+        dispatch(setPage(PagesEnum.Categories));
+        dispatch(setCategory(dispatchCategory));
+    }
+
+
+
     return (
         <div className="header-wrapper">
             <div className="header-page">
-                <NavLink to={'/'} >
-                    <h2 className={Boolean(articlesMatch) ? 'header-page__title active' : 'header-page__title'} >
-                        Articles
-                    </h2>
-                </NavLink>
+                <h2 onClick={() => onPageClick(PagesEnum.Articles)} className={page === PagesEnum.Articles ? 'header-page__title active' : 'header-page__title'} >
+                    Articles
+                </h2>
             </div>
 
             <div className="header-logo" />
 
             <div className='header-page' >
-                <h2 
-                    className={Boolean(categoriesMatch) || isMouseOnDropDown ? 'header-page__title active' : 'header-page__title'} 
-                    onMouseEnter={mouseEnterOnDropDownHandler} 
+                <h2
+                    onClick={() => onPageClick(PagesEnum.Categories)}
+                    onMouseEnter={mouseEnterOnDropDownHandler}
                     onMouseLeave={mouseLeaveOnDropDownHandler}
+                    className={page === PagesEnum.Categories || isMouseOnDropDown ? 'header-page__title active' : 'header-page__title'}
                 >
                     Categories
                 </h2>
 
-                <ul 
-                    className={isMouseOnDropDown ? 'drop-down drop-down-active' : 'drop-down'}
-                    onMouseEnter={mouseEnterOnDropDownHandler} 
+                <ul
+                    onMouseEnter={mouseEnterOnDropDownHandler}
                     onMouseLeave={mouseLeaveOnDropDownHandler}
+                    className={isMouseOnDropDown ? 'drop-down drop-down-active' : 'drop-down'}
                 >
-                    {categories.map(categorie => (
-                        <li key={categorie} className='drop-down__item' >
-                            <NavLink to={`/categories/:${categorie}`} className="drop-down__categorie" >{categorie}</NavLink>
+                    {categories.map(categoryItem => (
+                        <li 
+                            key={categoryItem}
+                            onClick={() => onCategoryClick(categoryItem)}
+                            className={category === categoryItem ? 'drop-down__item active' : 'drop-down__item'} 
+                        >
+                            {categoryItem}
                         </li>
                     ))}
                 </ul>

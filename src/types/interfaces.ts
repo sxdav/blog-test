@@ -1,18 +1,28 @@
-import { StatusEnum } from "./enums"
+import { CategoriesEnum, PagesEnum, StatusEnum, ViewEnum } from "./enums"
 
 
+
+export interface NavigationState {
+    page: PagesEnum,
+    category: CategoriesEnum | null
+}
 
 export interface FetchArticlesState {
-    articles: Article[],
+    amountOfFetchedArticles: number,
+    fetchedArticles: Article[],
     status: StatusEnum
 }
 export interface AddedArticlesState {
-    articles: Article[]
+    addedArticles: Article[]
 }
 export interface Article {
     title: string,
     cover: string,
     text: string,
     author: string,
-    categorie: string
+    category: string
+}
+
+export interface ViewState {
+    view: ViewEnum
 }

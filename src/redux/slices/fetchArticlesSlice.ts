@@ -6,16 +6,18 @@ import { CategoriesEnum, StatusEnum } from "../../types/enums";
 import { loremIpsum } from "lorem-ipsum";
 
 
-export const fetchArticles = createAsyncThunk<any, undefined, {rejectValue: string}>(
+
+export const fetchArticles = createAsyncThunk<any, number, {rejectValue: string}>(
     'fetchArticles/fetchArticles',
-    async (_, {rejectWithValue}) => {
+    async (amountOfFetchedArticles) => {
+        console.log(amountOfFetchedArticles)
         return await new Promise((resolve) => {
             setTimeout(() => {
                 let returnArr: Article[] = [];
     
-                for (let i = 0; i < 50; i++) {
+                for (let i = 0; i < amountOfFetchedArticles; i++) {
                     const categories = Object.keys(CategoriesEnum);
-                    const categorie = categories[Math.floor(Math.random() * (5 - 0)) + 0]
+                    const category = categories[Math.floor(Math.random() * (5 - 0)) + 0]
     
                     const a: Article = {
                         title: loremIpsum({
@@ -24,7 +26,7 @@ export const fetchArticles = createAsyncThunk<any, undefined, {rejectValue: stri
                             sentenceUpperBound: 6,
                             suffix: '',
                         }),
-                        cover: categorie,
+                        cover: category,
                         text: loremIpsum({
                             count: 3,
                             sentenceLowerBound: 4,   
@@ -40,7 +42,7 @@ export const fetchArticles = createAsyncThunk<any, undefined, {rejectValue: stri
                             sentenceUpperBound: 2,
                             suffix: '',
                         }),
-                        categorie: categorie
+                        category: category
                     };
     
                     returnArr = [...returnArr, a];
@@ -56,21 +58,30 @@ export const fetchArticles = createAsyncThunk<any, undefined, {rejectValue: stri
 )
 
 export const initialState: FetchArticlesState = {
-    articles: [],
+    amountOfFetchedArticles: 10,
+    fetchedArticles: [],
     status: StatusEnum.LOADING
 }
 export const fetchArticlesSlice = createSlice ({
     name: 'fetchArticles',
     initialState,
-    reducers: {},
+    reducers: {
+        setAmountOfFetchedArticles(state, action) {
+            state.amountOfFetchedArticles = action.payload;
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(fetchArticles.pending, (state) => {
                 state.status = StatusEnum.LOADING;
             })
             .addCase(fetchArticles.fulfilled, (state, action) => {
-                state.articles = action.payload;
+                state.fetchedArticles = [...state.fetchedArticles, ...action.payload];
                 state.status = StatusEnum.SUCCESS;
             })
     }
 })
+
+
+
+export const { setAmountOfFetchedArticles } = fetchArticlesSlice.actions;

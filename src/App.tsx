@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
+import './scss/app.scss'
 
-import { Route, Routes } from 'react-router-dom';
-import { useAppDispatch } from './redux/hooks';
+import { StatusEnum } from './types/enums';
+
+import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { fetchArticles } from './redux/slices/fetchArticlesSlice';
+import { addArticle } from './redux/slices/addedArticlesSlice'
+import ReactPaginate from 'react-paginate';
 
 import Header from './components/Header';
-import Articles from './pages/Articles';
-import Categories from './pages/Categories';
+import ArticleListItem from './components/ArticleListItem'
 
 
 
@@ -15,18 +18,52 @@ import Categories from './pages/Categories';
 export default function App() {
 	const dispatch = useAppDispatch();
 
-	useEffect(() => {dispatch(fetchArticles())}, [dispatch]);
+	const { page, category } = useAppSelector(state => state.navigation);
+	const { addedArticles } = useAppSelector(state => state.addedArticles);
+	const { amountOfFetchedArticles, fetchedArticles, status } = useAppSelector(state => state.fetchArticles);
+	const { view } = useAppSelector(state => state.view);
+
+	const articles = status === StatusEnum.SUCCESS ? [...addedArticles, ...fetchedArticles] : null;
+
+	useEffect(() => { dispatch(fetchArticles(amountOfFetchedArticles)) }, [amountOfFetchedArticles, dispatch]);
 
 
 
 	return (
-		<Routes>
-			<Route path='/' element={<Header />}>
-				<Route index element={<Articles/>} />
-				<Route path='/categories' element={<Categories/>} >
-					<Route path=':id' element={<Categories />} />
-				</Route>
-			</Route>
-		</Routes>
+		<div className="wrapper">
+			<Header dispatch={dispatch} page={page} category={category} />
+
+			<div className="main">
+				<div className="content-wrapper">
+					<div className="content-menu">
+						
+					</div>
+				</div>
+			</div>
+
+
+			{/* <ArticleListItem
+				title={articles[0].title}
+				cover={articles[0].cover}
+				text={articles[0].text}
+				author={articles[0].author}
+				category={articles[0].category}
+			/>
+
+			<ReactPaginate
+				breakLabel="..."
+				nextLabel="Show more products >"
+				previousLabel="Back"
+				onPageChange={handlePageClick}
+				pageRangeDisplayed={5}
+				pageCount={pageCount}
+				containerClassName="pagination"
+				pageClassName="pagination__link"
+				activeClassName="pagination__link--active"
+				previousClassName="pagination__prev"
+				nextClassName="pagination__next"
+				disabledClassName="pagination__disabled"
+			/> */}
+		</div>
 	);
 }

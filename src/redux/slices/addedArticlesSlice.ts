@@ -5,14 +5,14 @@ import { AddedArticlesState } from "../../types/interfaces";
 
 
 const initialState: AddedArticlesState = {
-    articles: []
+    addedArticles: []
 }
 export const addedArticlesSlice = createSlice ({
     name: 'addedArticles',
     initialState,
     reducers: {
         addArticle(state, action) {
-            state.articles = action.payload
+            state.addedArticles = [...state.addedArticles, action.payload];
         }
     }
 })

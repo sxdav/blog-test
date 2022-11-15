@@ -5,7 +5,7 @@
         justify-content: center;
         min-height: 90px;
         gap: 40px;
-        background-color: #22333b;
+        background-color: #22333B;
     }
 
     &-logo {
@@ -26,7 +26,7 @@
             z-index: 100;
             font-family: "Open Sans";
             font-size: 24px;
-            font-weight: 500px;
+            font-weight: 600;
             color: #909090;
 
             cursor: pointer;
@@ -45,7 +45,7 @@
     width: 100%;
     padding: 6px;
     border-radius: 6px;
-    background-color: #22333b;
+    background-color: #22333B;
     transform: translateY(-100px);
     transition: 500ms all ease;
 
@@ -53,7 +53,7 @@
         opacity: 1;
         transform: translateY(0px);
 
-        .drop-down__categorie {
+        .drop-down__item {
             opacity: 1;
         }
     }
@@ -61,11 +61,10 @@
     &__item {
         display: flex;
         justify-content: center;
-    }
-    &__categorie {
+
         font-family: "Open Sans";
         font-size: 16px;
-        font-weight: 500px;
+        font-weight: 400;
         color: #909090;
         opacity: 0;
 
