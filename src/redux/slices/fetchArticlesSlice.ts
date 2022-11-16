@@ -7,15 +7,14 @@ import { loremIpsum } from "lorem-ipsum";
 
 
 
-export const fetchArticles = createAsyncThunk<any, number, {rejectValue: string}>(
+export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue: string}>(
     'fetchArticles/fetchArticles',
     async (amountOfFetchedArticles) => {
-        console.log(amountOfFetchedArticles)
         return await new Promise((resolve) => {
             setTimeout(() => {
                 let returnArr: Article[] = [];
     
-                for (let i = 0; i < amountOfFetchedArticles; i++) {
+                for (let i = 0; i < (amountOfFetchedArticles === 'All' ? 50 : amountOfFetchedArticles); i++) {
                     const categories = Object.keys(CategoriesEnum);
                     const category = categories[Math.floor(Math.random() * (5 - 0)) + 0]
     
@@ -76,7 +75,7 @@ export const fetchArticlesSlice = createSlice ({
                 state.status = StatusEnum.LOADING;
             })
             .addCase(fetchArticles.fulfilled, (state, action) => {
-                state.fetchedArticles = [...state.fetchedArticles, ...action.payload];
+                state.fetchedArticles = action.payload;
                 state.status = StatusEnum.SUCCESS;
             })
     }

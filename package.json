@@ -15,6 +15,8 @@
     "lorem-ipsum": "^2.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.39.4",
+    "react-icons": "^4.6.0",
     "react-lazy-load-image-component": "^1.5.6",
     "react-loading-skeleton": "^3.1.0",
     "react-paginate": "^8.1.4",

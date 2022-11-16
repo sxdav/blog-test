@@ -8,7 +8,7 @@ export interface NavigationState {
 }
 
 export interface FetchArticlesState {
-    amountOfFetchedArticles: number,
+    amountOfFetchedArticles: number | 'All',
     fetchedArticles: Article[],
     status: StatusEnum
 }
@@ -25,4 +25,10 @@ export interface Article {
 
 export interface ViewState {
     view: ViewEnum
+}
+
+export interface AddArticleFields {
+    title: string,
+    text: string,
+    author: string
 }

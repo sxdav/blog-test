@@ -5,11 +5,11 @@ import { StatusEnum } from './types/enums';
 
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { fetchArticles } from './redux/slices/fetchArticlesSlice';
-import { addArticle } from './redux/slices/addedArticlesSlice'
 import ReactPaginate from 'react-paginate';
 
 import Header from './components/Header';
 import ArticleListItem from './components/ArticleListItem'
+import Menu from './components/Menu';
 
 
 
@@ -35,9 +35,7 @@ export default function App() {
 
 			<div className="main">
 				<div className="content-wrapper">
-					<div className="content-menu">
-						
-					</div>
+					<Menu amountOfFetchedArticles={amountOfFetchedArticles} />
 				</div>
 			</div>
 
