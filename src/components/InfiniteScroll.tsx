@@ -1,33 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { StatusEnum } from '../types/enums';
+import { CategoriesEnum, PagesEnum, StatusEnum } from '../types/enums';
 import { Article } from '../types/interfaces';
 
 import { fetchArticles } from '../redux/slices/fetchArticlesSlice';
 import { useAppDispatch } from '../redux/hooks';
 
 import InfiniteScrollComponent from 'react-infinite-scroller';
-import ArticleListItemLoader from './ArticleListItemLoader';
 import ArticleItem from './Article';
+import ArticleLoader from './ArticleLoader';
 
 
 
 
 
 interface Props {
+    page: PagesEnum,
+    category: CategoriesEnum | null
     articles: Article[],
     fetchedArticlesLength: number,
     amountOfAllArticles: number,
-    status: StatusEnum
+    status: StatusEnum,
+    skeletonLoaders: number[]
 }
-const InfiniteScroll = ({ articles, fetchedArticlesLength, amountOfAllArticles, status }: Props) => {
+const InfiniteScroll = ({ skeletonLoaders, page, category, articles, fetchedArticlesLength, amountOfAllArticles, status }: Props) => {
     const dispatch = useAppDispatch();
 
     const getNewArticles = () => {
         if (fetchedArticlesLength !== amountOfAllArticles && status !== StatusEnum.LOADING) {
-            dispatch(fetchArticles(10));
+            dispatch(fetchArticles({ amountOfFetchedArticles: 10, category }));
         }
     }
+
+    const [isFirstLoadingDone, setisFirstLoadingDone] = useState<boolean>(false);
+    useEffect(() => {status === StatusEnum.SUCCESS && setisFirstLoadingDone(true)}, [])
 
 
 
@@ -36,9 +42,8 @@ const InfiniteScroll = ({ articles, fetchedArticlesLength, amountOfAllArticles, 
             loadMore={getNewArticles}
             hasMore={fetchedArticlesLength !== amountOfAllArticles}
             threshold={1000}
-            // loader={<ArticleListItemLoader key={`${articles[0].title}1`} />}
         >
-            {articles.map(article => (
+            {isFirstLoadingDone && articles.map(article => (
                 <ArticleItem
                     key={article.title}
                     title={article.title}
@@ -48,6 +53,11 @@ const InfiniteScroll = ({ articles, fetchedArticlesLength, amountOfAllArticles, 
                     category={article.category}
                 />
             ))}
+            {status === StatusEnum.LOADING &&
+                skeletonLoaders.map((article, index) => (
+                    <ArticleLoader key={index} />
+                ))
+            }
         </InfiniteScrollComponent>
     )
 }

@@ -7,16 +7,16 @@ import { loremIpsum } from "lorem-ipsum";
 
 
 
-export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue: string}>(
+export const fetchArticles = createAsyncThunk<any, {amountOfFetchedArticles: number | 'All', category: CategoriesEnum | null}, {rejectValue: string}>(
     'fetchArticles/fetchArticles',
-    async (amountOfFetchedArticles) => {
+    async ({ amountOfFetchedArticles, category }) => {
         return await new Promise((resolve) => {
             setTimeout(() => {
                 let returnArr: Article[] = [];
     
                 for (let i = 0; i < (amountOfFetchedArticles === 'All' ? 10 : amountOfFetchedArticles); i++) {
-                    const categories = Object.keys(CategoriesEnum);
-                    const category = categories[Math.floor(Math.random() * (4 - 0)) + 0]
+                    const categories = [CategoriesEnum.Cars, CategoriesEnum.Politics, CategoriesEnum.Recipes, CategoriesEnum.Technology];
+                    const categoryIndex = categories[Math.floor(Math.random() * (4 - 0)) + 0]
     
                     const a: Article = {
                         title: loremIpsum({
@@ -25,7 +25,7 @@ export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue:
                             sentenceUpperBound: 6,
                             suffix: '',
                         }),
-                        cover: category,
+                        cover: category || categoryIndex,
                         text: loremIpsum({
                             count: 3,
                             sentenceLowerBound: 4,   
@@ -41,7 +41,7 @@ export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue:
                             sentenceUpperBound: 2,
                             suffix: '',
                         }),
-                        category: category
+                        category: category || categoryIndex
                     };
     
                     returnArr = [...returnArr, a];
@@ -68,6 +68,9 @@ export const fetchArticlesSlice = createSlice ({
     reducers: {
         setAmountOfFetchedArticles(state, action) {
             state.amountOfFetchedArticles = action.payload;
+        },
+        resetFetchArticles(state) {
+            state.fetchedArticles = [];
         }
     },
     extraReducers: builder => {
@@ -84,4 +87,4 @@ export const fetchArticlesSlice = createSlice ({
 
 
 
-export const { setAmountOfFetchedArticles } = fetchArticlesSlice.actions;
+export const { setAmountOfFetchedArticles, resetFetchArticles } = fetchArticlesSlice.actions;

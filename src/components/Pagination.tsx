@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../scss/components/pagination.scss'
 
 import { StatusEnum } from '../types/enums';
@@ -21,18 +21,11 @@ interface Props {
     fetchedArticlesLength: number,
     amountOfAllArticles: number,
     status: StatusEnum,
-    addedArticles: Article[]
+    addedArticles: Article[],
+    skeletonLoaders: number[]
 }
-const Pagination = ({ articles, amountOfFetchedArticles, fetchedArticlesLength, amountOfAllArticles, status, addedArticles }: Props) => {
+const Pagination = ({ articles, amountOfFetchedArticles, fetchedArticlesLength, amountOfAllArticles, status, addedArticles, skeletonLoaders }: Props) => {
     const dispatch = useAppDispatch();
-
-    const skeletonLoaders = useMemo(() => {
-		let returnArr: number[] = [];
-		for (let i = 0; i < (amountOfFetchedArticles === 'All' ? 10 : amountOfFetchedArticles); i++) {
-			returnArr = [...returnArr, i];
-		}
-		return returnArr
-	}, [amountOfFetchedArticles])
 
     const [currentItems, setCurrentItems] = useState<Article[] | null>(null);
 	const [itemOffset, setItemOffset] = useState<number>(0);
@@ -41,9 +34,9 @@ const Pagination = ({ articles, amountOfFetchedArticles, fetchedArticlesLength, 
 	useEffect(() => {
 		if (articles.length - itemOffset < amountOfFetchedArticles && fetchedArticlesLength !== amountOfAllArticles && status !== StatusEnum.LOADING) {
 			if (amountOfAllArticles - fetchedArticlesLength > amountOfFetchedArticles) {
-				dispatch(fetchArticles(amountOfFetchedArticles));
+				dispatch(fetchArticles({amountOfFetchedArticles, category: null}));
 			} else {
-				dispatch(fetchArticles(amountOfAllArticles - fetchedArticlesLength));
+				dispatch(fetchArticles({amountOfFetchedArticles: amountOfAllArticles - fetchedArticlesLength, category: null}));
 			}
 		}
 
@@ -68,7 +61,7 @@ const Pagination = ({ articles, amountOfFetchedArticles, fetchedArticlesLength, 
     return (
         <>
             <div className="paginated-articles-wrapper">
-                {articles.length - itemOffset > amountOfFetchedArticles || fetchedArticlesLength === amountOfAllArticles ?
+                {articles.length - itemOffset >= amountOfFetchedArticles || fetchedArticlesLength === amountOfAllArticles ?
                     currentItems?.map((item) => (
                         <ArticleListItem
                             key={item.title}

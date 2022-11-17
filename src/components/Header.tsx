@@ -30,6 +30,7 @@ const Header = ({ dispatch, page, category }: Props) => {
     
     const onPageClick = (dispatchPage: PagesEnum) => {
         dispatch(setPage(dispatchPage));
+        dispatch(setCategory(null));
     }
     const onCategoryClick = (dispatchCategory: string) => {
         dispatch(setPage(PagesEnum.Categories));

@@ -1,0 +1,27 @@
+.article-cover-loader {
+    width: 30%;
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+.article-content-loader-wrapper {
+    width: 100%;
+}
+.article-loader {
+    &__title {
+        height: 24px;
+        margin-bottom: 18px;
+    }
+    &__text {
+        &__item {
+            height: 12px;
+            margin-bottom: 6px;
+        }
+    }
+    &__author {
+        width: 40%;
+        float: right;
+        height: 24px;
+        margin-top: 30px;
+    }
+}
