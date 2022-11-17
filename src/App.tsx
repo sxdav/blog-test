@@ -23,13 +23,6 @@ export default function App() {
 
 
 	const articles = useMemo(() => [...addedArticles, ...fetchedArticles], [addedArticles, fetchedArticles]);
-	const skeletonLoaders = useMemo(() => {
-		let returnArr: number[] = [];
-		for (let i = 0; i < amountOfFetchedArticles; i++) {
-			returnArr = [...returnArr, i];
-		}
-		return returnArr
-	}, [amountOfFetchedArticles])
 
 
 
@@ -42,16 +35,20 @@ export default function App() {
 					<Menu amountOfFetchedArticles={amountOfFetchedArticles} />
 
 					{amountOfFetchedArticles === 'All' ?
-						<InfiniteScroll />
+						<InfiniteScroll 
+							articles={articles}
+							fetchedArticlesLength={fetchedArticles.length}
+							amountOfAllArticles={amountOfAllArticles}
+							status={status}
+						/>
 						:
 						<Pagination
 							articles={articles}
 							amountOfFetchedArticles={amountOfFetchedArticles}
-							fetchedArticles={fetchedArticles}
+							fetchedArticlesLength={fetchedArticles.length}
 							amountOfAllArticles={amountOfAllArticles}
 							status={status}
 							addedArticles={addedArticles}
-							skeletonLoaders={skeletonLoaders}
 						/>
 					}
 				</div>

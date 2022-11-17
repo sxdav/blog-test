@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import '../scss/components/pagination.scss'
 
 import { StatusEnum } from '../types/enums';
@@ -18,29 +18,36 @@ import ArticleListItemLoader from './ArticleListItemLoader';
 interface Props {
     articles: Article[],
     amountOfFetchedArticles: number | "All",
-    fetchedArticles: Article[],
+    fetchedArticlesLength: number,
     amountOfAllArticles: number,
     status: StatusEnum,
-    addedArticles: Article[],
-    skeletonLoaders: number[]
+    addedArticles: Article[]
 }
-const Pagination = ({ articles, amountOfFetchedArticles, fetchedArticles, amountOfAllArticles, status, addedArticles, skeletonLoaders }: Props) => {
+const Pagination = ({ articles, amountOfFetchedArticles, fetchedArticlesLength, amountOfAllArticles, status, addedArticles }: Props) => {
     const dispatch = useAppDispatch();
+
+    const skeletonLoaders = useMemo(() => {
+		let returnArr: number[] = [];
+		for (let i = 0; i < (amountOfFetchedArticles === 'All' ? 10 : amountOfFetchedArticles); i++) {
+			returnArr = [...returnArr, i];
+		}
+		return returnArr
+	}, [amountOfFetchedArticles])
 
     const [currentItems, setCurrentItems] = useState<Article[] | null>(null);
 	const [itemOffset, setItemOffset] = useState<number>(0);
 	const [articlesLength, setArticlesLength] = useState<number>(0);
 
 	useEffect(() => {
-		if (articles.length - itemOffset < amountOfFetchedArticles && fetchedArticles.length !== amountOfAllArticles && status !== StatusEnum.LOADING) {
-			if (amountOfAllArticles - fetchedArticles.length > amountOfFetchedArticles) {
+		if (articles.length - itemOffset < amountOfFetchedArticles && fetchedArticlesLength !== amountOfAllArticles && status !== StatusEnum.LOADING) {
+			if (amountOfAllArticles - fetchedArticlesLength > amountOfFetchedArticles) {
 				dispatch(fetchArticles(amountOfFetchedArticles));
 			} else {
-				dispatch(fetchArticles(amountOfAllArticles - fetchedArticles.length));
+				dispatch(fetchArticles(amountOfAllArticles - fetchedArticlesLength));
 			}
 		}
 
-	}, [amountOfAllArticles, amountOfFetchedArticles, articles.length, dispatch, fetchedArticles.length, itemOffset, status])
+	}, [amountOfAllArticles, amountOfFetchedArticles, articles.length, dispatch, fetchedArticlesLength, itemOffset, status])
 
 	useEffect(() => {
 		if (articles !== null) {
@@ -61,7 +68,7 @@ const Pagination = ({ articles, amountOfFetchedArticles, fetchedArticles, amount
     return (
         <>
             <div className="paginated-articles-wrapper">
-                {articles.length - itemOffset > amountOfFetchedArticles || fetchedArticles.length === amountOfAllArticles ?
+                {articles.length - itemOffset > amountOfFetchedArticles || fetchedArticlesLength === amountOfAllArticles ?
                     currentItems?.map((item) => (
                         <ArticleListItem
                             key={item.title}
