@@ -13,7 +13,6 @@ import storage from 'redux-persist/lib/storage';
 
 import { fetchArticlesSlice } from './slices/fetchArticlesSlice';
 import { addedArticlesSlice } from './slices/addedArticlesSlice';
-import { viewSlice } from './slices/viewSlice';
 import { navigationSlice } from './slices/navigationSlice';
 
 
@@ -23,14 +22,13 @@ import { navigationSlice } from './slices/navigationSlice';
 const rootReducer = combineReducers({
     navigation: navigationSlice.reducer,
 	fetchArticles: fetchArticlesSlice.reducer,
-	addedArticles: addedArticlesSlice.reducer,
-    view: viewSlice.reducer
+	addedArticles: addedArticlesSlice.reducer
 });
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['navigation', 'addedArticles', 'view']
+    whitelist: ['navigation', 'addedArticles']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
