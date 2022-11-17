@@ -9,6 +9,7 @@ export interface NavigationState {
 
 export interface FetchArticlesState {
     amountOfFetchedArticles: number | 'All',
+    amountOfAllArticles: number,
     fetchedArticles: Article[],
     status: StatusEnum
 }

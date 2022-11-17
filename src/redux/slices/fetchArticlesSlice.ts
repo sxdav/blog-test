@@ -14,9 +14,9 @@ export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue:
             setTimeout(() => {
                 let returnArr: Article[] = [];
     
-                for (let i = 0; i < (amountOfFetchedArticles === 'All' ? 50 : amountOfFetchedArticles); i++) {
+                for (let i = 0; i < (amountOfFetchedArticles === 'All' ? 10 : amountOfFetchedArticles); i++) {
                     const categories = Object.keys(CategoriesEnum);
-                    const category = categories[Math.floor(Math.random() * (5 - 0)) + 0]
+                    const category = categories[Math.floor(Math.random() * (4 - 0)) + 0]
     
                     const a: Article = {
                         title: loremIpsum({
@@ -29,9 +29,9 @@ export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue:
                         text: loremIpsum({
                             count: 3,
                             sentenceLowerBound: 4,   
-                            sentenceUpperBound: 24,
-                            paragraphLowerBound: 6,
-                            paragraphUpperBound: 12,
+                            sentenceUpperBound: 16,
+                            paragraphLowerBound: 2,
+                            paragraphUpperBound: 4,
                             units: "paragraphs",
                             suffix: '',
                         }),
@@ -49,7 +49,7 @@ export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue:
     
                 resolve(returnArr);
     
-            }, 3000)
+            }, 2000)
         }).then(resp => {
             return resp
         })
@@ -58,8 +58,9 @@ export const fetchArticles = createAsyncThunk<any, number | 'All', {rejectValue:
 
 export const initialState: FetchArticlesState = {
     amountOfFetchedArticles: 10,
+    amountOfAllArticles: 50,
     fetchedArticles: [],
-    status: StatusEnum.LOADING
+    status: StatusEnum.SUCCESS
 }
 export const fetchArticlesSlice = createSlice ({
     name: 'fetchArticles',
@@ -75,7 +76,7 @@ export const fetchArticlesSlice = createSlice ({
                 state.status = StatusEnum.LOADING;
             })
             .addCase(fetchArticles.fulfilled, (state, action) => {
-                state.fetchedArticles = action.payload;
+                state.fetchedArticles = [...state.fetchedArticles, ...action.payload];
                 state.status = StatusEnum.SUCCESS;
             })
     }

@@ -4,13 +4,13 @@
 
 .main {
     width: 100%;
-    height: calc(100vh - 90px);
-    padding: 30px 240px;
+    min-height: calc(100vh - 90px);
+    padding: 30px 30px;
 }
 
 .content-wrapper {
-    margin: 0px;
-    width: 100%;
+    margin: auto;
+    max-width: 90%;
     height: 100%;
     padding: 12px;
     border-radius: 8px;

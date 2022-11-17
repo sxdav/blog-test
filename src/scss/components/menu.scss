@@ -1,6 +1,7 @@
 .main {
     &-drop-down {
         position: absolute;
+        z-index: 200;
         top: 24px;
         left: 119px;
         background-color: #22333b;

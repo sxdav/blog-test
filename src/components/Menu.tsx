@@ -38,7 +38,7 @@ const Menu = ({ amountOfFetchedArticles }: Props) => {
 
 
 
-    const [isAddDropDownActive, setAddShownDropDownActive] = useState<boolean>(true);
+    const [isAddDropDownActive, setAddShownDropDownActive] = useState<boolean>(false);
 
     const addDropDownHandler = () => {
         setAddShownDropDownActive(!isAddDropDownActive)
@@ -54,7 +54,7 @@ const Menu = ({ amountOfFetchedArticles }: Props) => {
         mode: "onSubmit"
     });
 
-    const [isCategoryDropDownActive, setIsCategoryDropDownActive] = useState<boolean>(true);
+    const [isCategoryDropDownActive, setIsCategoryDropDownActive] = useState<boolean>(false);
     const [choosedCategory, setChoosedCategory] = useState<string>('Recipes');
 
     const categoryDropDownMouseEnter = () => {
